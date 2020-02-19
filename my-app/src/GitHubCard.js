@@ -13,22 +13,6 @@ function GitHubCard({data}) {
           </li>
         </ul>
       </div>
-      {
-        data.followers.length > 0 ? 
-          (data.followers.map((follower, idx) => (
-            <div className="card" id={follower.id}>
-              <img src={follower.avatar_url} alt="follower card" />
-              <ul>
-                <li>{follower.name}</li>
-                <li>{follower.login}</li>
-                <li>
-                  <a href={follower?.html_url}>GitHub Connection</a>
-                </li>
-              </ul>
-            </div>
-          )))
-        : null
-      }
     </div>
   );
 }
