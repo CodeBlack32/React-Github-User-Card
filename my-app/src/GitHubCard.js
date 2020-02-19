@@ -1,28 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-function GitHubCard(props) {
+function GitHubCard({data}) {
   return (
     <div>
-      <div className="my-card">
-        <img src={props.data.ghData.avatar_url} alt={Image} />
+      <div className="my-card" id={data.ghData.id}>
+        <img src={data.ghData.avatar_url} alt='GH avatar' />
         <ul>
-          <li>{props.data.ghData.name}</li>
-          <li>{props.data.ghData.login}</li>
+          <li>{data.ghData.name}</li>
+          <li>{data.ghData.login}</li>
           <li>
-            <a href={props.data.ghData.html_url}>GitHub Connection</a>
+            <a href={data.ghData.html_url}>GitHub Connection</a>
           </li>
         </ul>
       </div>
-      <div className="card">
-        <img src={props.data.followData.avatar_url} alt={Image} />
-        <ul>
-          <li>{props.data.followData.name}</li>
-          <li>{props.data.followData.login}</li>
-          <li>
-            <a href={props.data.followData.html_url}>GitHub Connection</a>
-          </li>
-        </ul>
-      </div>
+      {
+        data.followers.length > 0 ? 
+          (data.followers.map((follower, idx) => (
+            <div className="card" id={follower.id}>
+              <img src={follower.avatar_url} alt="follower card" />
+              <ul>
+                <li>{follower.name}</li>
+                <li>{follower.login}</li>
+                <li>
+                  <a href={follower?.html_url}>GitHub Connection</a>
+                </li>
+              </ul>
+            </div>
+          )))
+        : null
+      }
     </div>
   );
 }
