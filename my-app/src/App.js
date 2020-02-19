@@ -58,7 +58,7 @@ class App extends Component {
       <div className="App">
         <h1>GitHub User Card</h1>
         <GitHubCard data={this.state.ghData} />
-        {this.state.followData.map(follower => (
+        {this.state.followers.map(follower => (
           <Card key={follower.login} {...follower} />
         ))}
       </div>
