@@ -19,24 +19,38 @@ class App extends Component {
 
     this.state = {
       ghData: [],
-      followData: []
+      followData: [],
+      followers: []
     };
   }
 
   componentDidMount() {
-    axios.get(`https://api.github.com/users/CodeBlack32`).then(res => {
-      this.setState({
-        ghData: res.data
-      });
-    });
+    // Beware: then-ception ahead as a workaround for 
+    // different data shape for users and followers
 
-    followersArray.forEach(follower => {
-      axios.get(follower).then(res => {
-        this.setState({
-          followData: [...this.state.followData, res.data]
-        });
-      });
-    });
+    // GET request for user object
+    axios.get(`https://api.github.com/users/CodeBlack32`)
+      .then(res => {
+        this.setState({ghData: res.data})
+        return res.data;
+      })
+        .then(data => {
+          // GET request passing user object's follower's property
+          axios.get(data.followers_url)
+            .then(res => {
+              // Map over each follower in the follower's array (an array of objects with a login property)
+              res.data.map(follower => {
+                // GET request for the follower object (to contain all possible data points)
+                axios.get(`https://api.github.com/users/${follower.login}`)
+                  .then(res => {
+                    this.setState({
+                      ...this.state, 
+                      followers: [...this.state.followers, res.data]})
+                  })
+              })
+            })
+        })
+        .catch(err => console.log(err))
   }
 
   render() {
@@ -44,7 +58,7 @@ class App extends Component {
       <div className="App">
         <h1>GitHub User Card</h1>
         <GitHubCard data={this.state.ghData} />
-        {this.state.followData.map(follower => (
+        {this.state.followers.map(follower => (
           <Card key={follower.login} {...follower} />
         ))}
       </div>
